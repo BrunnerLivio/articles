@@ -49,7 +49,7 @@ export class AppService {
    constructor(@Logger('AppService') private logger: LoggerService) { }
 
    getHello() {
-     this.logger.log('Hello World'); // Prints: '[ApppService] Hello World'
+     this.logger.log('Hello World'); // Prints: '[AppService] Hello World'
      return 'Hello World';
    }
 }
@@ -161,7 +161,7 @@ If everything is set up correctly we will receive the following log output.
 [AppService] Hello World
 ```
 
-That is cool. Though, we are lazy, aren't we? We do not want to explicitly write `this.logger.setPrefix('AppService')` in the constructor of our services? Something like `@Logger('AppService')` before our `logger`-parameter would be way more verbose and we would not have to define a constructor every time we want to use our logger.
+That is cool. Though, we are lazy, aren't we? We do not want to explicitly write `this.logger.setPrefix('AppService')` in the constructor of our services? Something like `@Logger('AppService')` before our `logger`-parameter would be way less verbose and we would not have to define a constructor every time we want to use our logger.
 
 ## Logger Decorator
 
@@ -249,7 +249,7 @@ All we need to do now is to add these logger providers to our `LoggerModule`.
 
 import { Module } from '@nestjs/common';
 import { LoggerService } from './logger.service';
-import { createLoggerProviders } from './logger.providers.ts';
+import { createLoggerProviders } from './logger.providers';
 
 const loggerProviders = createLoggerProviders();
 
@@ -293,7 +293,7 @@ export class LoggerModule {
 Do not forget to update the import array in `app.module.ts`
 
 ```typescript
-// src/logger/logger.module.ts
+// src/logger/app.module.ts
 
 @Module({
   controllers: [AppController],
@@ -314,7 +314,7 @@ export class AppService {
    constructor(@Logger('AppService') private logger: LoggerService) { }
 
    getHello() {
-     this.logger.log('Hello World'); // Prints: '[ApppService] Hello World'
+     this.logger.log('Hello World'); // Prints: '[AppService] Hello World'
      return 'Hello World';
    }
 }
@@ -331,14 +331,8 @@ Yey, we did it!
 
 ## Conclusion
 
-We have touched numerous advanced parts of NestJS. We have seen how we can
-create simple decorators, dynamic module and dynamic providers. You can
-do impressive stuff with it in a clean and testable way.
+We have touched on numerous advanced parts of NestJS. We have seen how we can create simple decorators, dynamic modules and dynamic providers. You can do impressive stuff with it in a clean and testable way.
 
-As mentioned we have used the exact same patterns for the internals of
-`@nestjs/typeorm` and `@nestjs/mongoose`. In the Mongoose integration,
-for example, we used a very similar approach for generating injectable providers
-for each model.
+As mentioned we have used the exact same patterns for the internals of `@nestjs/typeorm` and `@nestjs/mongoose`. In the Mongoose integration, for example, we used a very similar approach for generating injectable providers for each model.
 
-You can find the code in this [Github repostiory](https://github.com/BrunnerLivio/logger-app). I have also refactored smaller
-functionalities and added unit tests, so you can use this code in production.
+You can find the code in this [Github repostiory](https://github.com/BrunnerLivio/logger-app). I have also refactored smaller functionalities and added unit tests, so you can use this code in production.
