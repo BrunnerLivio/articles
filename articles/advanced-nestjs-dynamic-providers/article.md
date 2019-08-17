@@ -1,8 +1,14 @@
-*Livio is a member of the NestJS core team and creator of the @nestjs/terminus integration*
+---
+published: true
+title: 'Advanced NestJS: Dynamic Providers'
+tags: nestjs, nest, node, angular
+---
+
+_Livio is a member of the NestJS core team and creator of the @nestjs/terminus integration_
 
 ## Intro
 
-**Dependency Injection** (short *DI*) is a powerful technique to build a loosely coupled architecture in a testable manner. In NestJS an item which is part of the DI context is called *provider*. A provider consists of two main parts, a value, and a unique token. In NestJS you can request the value of a *provider* by its token. This is most apparent when using the following snippet.
+**Dependency Injection** (short _DI_) is a powerful technique to build a loosely coupled architecture in a testable manner. In NestJS an item which is part of the DI context is called _provider_. A provider consists of two main parts, a value, and a unique token. In NestJS you can request the value of a _provider_ by its token. This is most apparent when using the following snippet.
 
 ```typescript
 import { NestFactory } from '@nestjs/core';
@@ -25,7 +31,6 @@ async function bootstrap() {
   console.log(port); // Prints: 3000
 }
 bootstrap();
-
 ```
 
 The `AppModule` consists of one provider with the token `PORT`.
@@ -46,12 +51,12 @@ So the final implementation will look like this:
 ```typescript
 @Injectable()
 export class AppService {
-   constructor(@Logger('AppService') private logger: LoggerService) { }
+  constructor(@Logger('AppService') private logger: LoggerService) {}
 
-   getHello() {
-     this.logger.log('Hello World'); // Prints: '[ApppService] Hello World'
-     return 'Hello World';
-   }
+  getHello() {
+    this.logger.log('Hello World'); // Prints: '[ApppService] Hello World'
+    return 'Hello World';
+  }
 }
 ```
 
@@ -131,7 +136,6 @@ import { LoggerService } from './logger.service';
 export class LoggerModule {
   static prefixesForLoggers: string[] = new Array<string>();
 }
-
 ```
 
 We also add `prefixesForLoggers` as static attribute of `LoggerModule` where we
@@ -155,7 +159,6 @@ export class AppService {
     return 'Hello World!';
   }
 }
-
 ```
 
 Seems fine - let's start the application with `npm run start` and request the website with `curl http://localhost:3000/` or open up `http://localhost:3000` in your browser of choice.
@@ -191,7 +194,6 @@ export function Logger(prefix: string = '') {
   }
   return Inject(`LoggerService${prefix}`);
 }
-
 ```
 
 You can think of `@Logger('AppService')` as nothing more than an alias for `@Inject('LoggerServiceAppService')`.
@@ -240,7 +242,6 @@ function createLoggerProvider(prefix: string): Provider<LoggerService> {
 export function createLoggerProviders(): Array<Provider<LoggerService>> {
   return LoggerModule.prefixesForLoggers.map(prefix => createLoggerProvider(prefix));
 }
-
 ```
 
 The `createLoggerProviders`-function creates an array of providers for each prefix set by the `@Logger()` decorator. Thanks to the `useFactory` functionality of NestJS we can run a the `LoggerService.setPrefix()` method before the provider gets created.
@@ -261,8 +262,6 @@ const loggerProviders = createLoggerProviders();
   exports: [LoggerService, ...loggerProviders],
 })
 export class LoggerModule {}
-
-
 ```
 
 ...and that's it! Let's see if it works when we update the `app.service.ts`
@@ -272,14 +271,13 @@ export class LoggerModule {}
 
 @Injectable()
 export class AppService {
-   constructor(@Logger('AppService') private logger: LoggerService) { }
+  constructor(@Logger('AppService') private logger: LoggerService) {}
 
-   getHello() {
-     this.logger.log('Hello World'); // Prints: '[ApppService] Hello World'
-     return 'Hello World';
-   }
+  getHello() {
+    this.logger.log('Hello World'); // Prints: '[ApppService] Hello World'
+    return 'Hello World';
+  }
 }
-
 ```
 
 Calling `http://localhost:3000` will give us the following log

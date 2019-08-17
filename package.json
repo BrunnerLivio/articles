@@ -1,0 +1,18 @@
+{
+  "name": "articles",
+  "version": "1.0.0",
+  "scripts": {
+    "prettier": "prettier",
+    "prettier:base": "yarn run prettier \"**/*.{js,json,scss,md,ts,html,component.html}\"",
+    "prettier:write": "yarn run prettier:base --write",
+    "prettier:check": "yarn run prettier:base --list-different",
+    "dev-to-git": "dev-to-git"
+  },
+  "dependencies": {
+    "dev-to-git": "1.2.0",
+    "prettier": "1.18.2"
+  },
+  "repository": "git@github.com:BrunnerLivio/articles.git",
+  "author": "Livio <livio.brunner.lb1@gmail.com>",
+  "license": "MIT"
+}
