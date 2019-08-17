@@ -54,7 +54,7 @@ export class AppService {
   constructor(@Logger('AppService') private logger: LoggerService) {}
 
   getHello() {
-    this.logger.log('Hello World'); // Prints: '[ApppService] Hello World'
+    this.logger.log('Hello World'); // Prints: '[AppService] Hello World'
     return 'Hello World';
   }
 }
@@ -133,13 +133,8 @@ import { LoggerService } from './logger.service';
   providers: [LoggerService],
   exports: [LoggerService],
 })
-export class LoggerModule {
-  static prefixesForLoggers: string[] = new Array<string>();
-}
+export class LoggerModule {}
 ```
-
-We also add `prefixesForLoggers` as static attribute of `LoggerModule` where we
-will store prefixes defined by the `@Logger` decorator. We will get there later on.
 
 Let's see if it works in our `AppService`.
 
@@ -169,11 +164,11 @@ If everything is set up correctly we will receive the following log output.
 [AppService] Hello World
 ```
 
-That is cool. Though, we are lazy, aren't we? We do not want to explicitly write `this.logger.setPrefix('AppService')` in the constructor of our services? Something like `@Logger('AppService')` before our `logger`-parameter would be way more verbose and we would not have to define a constructor every time we want to use our logger.
+That is cool. Though, we are lazy, aren't we? We do not want to explicitly write `this.logger.setPrefix('AppService')` in the constructor of our services? Something like `@Logger('AppService')` before our `logger`-parameter would be way less verbose and we would not have to define a constructor every time we want to use our logger.
 
 ## Logger Decorator
 
-For our example, we do not need to exactly know how decorators work in TypeScript. All you need to know is that functions can be handled as a decorator. **Note that the following implementation is simplified**. This could lead to unwanted side-effects. We can go more in-depth in another article on how we manage decorators at NestJS.
+For our example, we do not need to exactly know how decorators work in TypeScript. All you need to know is that functions can be handled as a decorator.
 
 Lets quickly create our decorator manually.
 
@@ -188,17 +183,19 @@ We are just going to reuse the `@Inject()` decorator from `@nestjs/common`.
 
 import { Inject } from '@nestjs/common';
 
+export const prefixesForLoggers: string[] = new Array<string>();
+
 export function Logger(prefix: string = '') {
-  if (!LoggerModule.prefixesForLoggers.includes(prefix)) {
-    LoggerModule.prefixesForLoggers.push(prefix);
+  if (!prefixesForLoggers.includes(prefix)) {
+    prefixesForLoggers.push(prefix);
   }
   return Inject(`LoggerService${prefix}`);
 }
 ```
 
-You can think of `@Logger('AppService')` as nothing more than an alias for `@Inject('LoggerServiceAppService')`.
+You can think of `@Logger('AppService')` as nothing more than an alias for `@Inject('LoggerServiceAppService')`. The only special thing we have added is the `prefixesForLoggers` array. We will make use of this array later. This array just stores all the prefixes we are going to need.
 
-But wait, our Nest application does not know anything about a `LoggerServiceAppService` token. So let's create this token using dynamic providers from our `prefixesForLoggers` array.
+But wait, our Nest application does not know anything about a `LoggerServiceAppService` token. So let's create this token using dynamic providers and our newly created `prefixesForLoggers` array.
 
 ## Dynamic providers
 
@@ -220,9 +217,9 @@ Copy & paste the following code into your editor.
 ```typescript
 // src/logger/logger.provider.ts
 
+import { prefixesForLoggers } from './logger.decorator';
 import { Provider } from '@nestjs/common';
 import { LoggerService } from './logger.service';
-import { LoggerModule } from './logger.module';
 
 function loggerFactory(logger: LoggerService, prefix: string) {
   if (prefix) {
@@ -240,7 +237,7 @@ function createLoggerProvider(prefix: string): Provider<LoggerService> {
 }
 
 export function createLoggerProviders(): Array<Provider<LoggerService>> {
-  return LoggerModule.prefixesForLoggers.map(prefix => createLoggerProvider(prefix));
+  return prefixesForLoggers.map(prefix => createLoggerProvider(prefix));
 }
 ```
 
@@ -253,7 +250,7 @@ All we need to do now is to add these logger providers to our `LoggerModule`.
 
 import { Module } from '@nestjs/common';
 import { LoggerService } from './logger.service';
-import { createLoggerProviders } from './logger.providers.ts';
+import { createLoggerProviders } from './logger.providers';
 
 const loggerProviders = createLoggerProviders();
 
@@ -262,6 +259,46 @@ const loggerProviders = createLoggerProviders();
   exports: [LoggerService, ...loggerProviders],
 })
 export class LoggerModule {}
+```
+
+As simple as that. Wait no, that does not work? Because of JavaScript, man. Let me explain: `createLoggerProviders` will get called immediately once the file is loaded, right? At that point in time, the `prefixesForLoggers` array will be empty inside `logger.decorator.ts`, because the `@Logger()` decorator was not called.
+
+So how do we bypass that? The holy words are [_Dynamic Module_](https://docs.nestjs.com/modules#dynamic-modules). Dynamic modules allow us to create the module settings (which are usually given as parameter of the `@Module`-decorator) via a method. This method will get called after the `@Logger` decorator calls and therefore `prefixForLoggers` array will contain all the values.
+
+If you want to learn more about why this works, you may wanna check out this [video about the JavaScript event loop](https://www.youtube.com/watch?v=8aGhZQkoFbQ)
+
+Therefore we have to rewrite the `LoggerModule` to a _Dynamic Module_.
+
+```typescript
+// src/logger/logger.module.ts
+
+import { DynamicModule } from '@nestjs/common';
+import { LoggerService } from './logger.service';
+import { createLoggerProviders } from './logger.providers';
+
+export class LoggerModule {
+  static forRoot(): DynamicModule {
+    const prefixedLoggerProviders = createLoggerProviders();
+    return {
+      module: LoggerModule,
+      providers: [LoggerService, ...prefixedLoggerProviders],
+      exports: [LoggerService, ...prefixedLoggerProviders],
+    };
+  }
+}
+```
+
+Do not forget to update the import array in `app.module.ts`
+
+```typescript
+// src/logger/app.module.ts
+
+@Module({
+  controllers: [AppController],
+  providers: [AppService],
+  imports: [LoggerModule.forRoot()],
+})
+export class AppModule {}
 ```
 
 ...and that's it! Let's see if it works when we update the `app.service.ts`
@@ -274,7 +311,7 @@ export class AppService {
   constructor(@Logger('AppService') private logger: LoggerService) {}
 
   getHello() {
-    this.logger.log('Hello World'); // Prints: '[ApppService] Hello World'
+    this.logger.log('Hello World'); // Prints: '[AppService] Hello World'
     return 'Hello World';
   }
 }
@@ -290,14 +327,8 @@ Yey, we did it!
 
 ## Conclusion
 
-We have touched numerous advanced parts of NestJS. We have seen how we can
-create simple decorators and dynamic providers. You can
-do impressive stuff with it in a clean and testable way.
+We have touched on numerous advanced parts of NestJS. We have seen how we can create simple decorators, dynamic modules and dynamic providers. You can do impressive stuff with it in a clean and testable way.
 
-As mentioned we have used the exact same patterns for the internals of
-`@nestjs/typeorm` and `@nestjs/mongoose`. In the Mongoose integration,
-for example, we used a very similar approach for generating injectable providers
-for each model.
+As mentioned we have used the exact same patterns for the internals of `@nestjs/typeorm` and `@nestjs/mongoose`. In the Mongoose integration, for example, we used a very similar approach for generating injectable providers for each model.
 
-You can find the code in this [Github repostiory](https://github.com/BrunnerLivio/logger-app). I have also refactored smaller
-functionalities and added unit tests, so you can use this code in production.
+You can find the code in this [Github repostiory](https://github.com/BrunnerLivio/logger-app). I have also refactored smaller functionalities and added unit tests, so you can use this code in production.
