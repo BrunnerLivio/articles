@@ -12,7 +12,9 @@
     "dev-to-git": "1.2.0",
     "prettier": "1.18.2"
   },
-  "repository": "git@github.com:BrunnerLivio/articles.git",
+  "repository": {
+    "url": "https://github.com/BrunnerLivio/articles.git"
+  },
   "author": "Livio <livio.brunner.lb1@gmail.com>",
   "license": "MIT"
 }
