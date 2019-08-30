@@ -1,7 +1,11 @@
 ---
 published: true
 title: 'Advanced NestJS: Dynamic Providers'
-tags: nestjs, nest, node, angular
+tags: NestJS, Node.js, TypeScript
+path: '/articles/advanced-nestjs-dymaic-providers'
+date: '2019-08-17'
+description: 'Learn how to use dynamic providers with NestJS!'
+dev_to_path: 'https://dev.to/nestjs/advanced-nestjs-dynamic-providers-1ee'
 ---
 
 _Livio is a member of the NestJS core team and creator of the @nestjs/terminus integration_
