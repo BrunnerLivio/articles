@@ -335,4 +335,4 @@ We have touched on numerous advanced parts of NestJS. We have seen how we can cr
 
 As mentioned we have used the exact same patterns for the internals of `@nestjs/typeorm` and `@nestjs/mongoose`. In the Mongoose integration, for example, we used a very similar approach for generating injectable providers for each model.
 
-You can find the code in this [Github repostiory](https://github.com/BrunnerLivio/logger-app). I have also refactored smaller functionalities and added unit tests, so you can use this code in production.
+You can find the code in this [Github repostiory](https://github.com/BrunnerLivio/logger-app). I have also refactored smaller functionalities and added unit tests, so you can use this code in production. Happy hacking :)
