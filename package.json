@@ -9,8 +9,8 @@
     "dev-to-git": "dev-to-git"
   },
   "dependencies": {
-    "dev-to-git": "1.2.0",
-    "prettier": "1.18.2"
+    "dev-to-git": "1.4.1",
+    "prettier": "1.19.1"
   },
   "repository": {
     "url": "https://github.com/BrunnerLivio/articles.git"
