@@ -7,7 +7,7 @@ cache:
     - ~/.npm
 
 node_js:
-  - '11'
+  - '12'
 
 script:
   - yarn run prettier:check
