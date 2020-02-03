@@ -6,6 +6,7 @@ path: '/articles/icon-web-font'
 date: '2020-01-03'
 description: 'Create an icon web font for your design system using Github Actions.'
 dev_to_path: 'https://dev.to/brunnerlivio/create-an-icon-web-font-for-your-design-system-1ei6'
+cover_image: 'https://github.com/BrunnerLivio/articles/blob/master/articles/icon-web-font/featured-img.png?raw=true'
 ---
 
 Icons are an essential part of Design Systems and Brand Identity. At [Roche](https://www.roche.com/) we are building a UI Kit components library that should provide icons out of the box. For convenience and performance reasons we want to offer icons not only as SVG graphics but also as an icon web font.
