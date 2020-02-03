@@ -6,6 +6,7 @@ path: '/articles/advanced-nestjs-dymaic-providers'
 date: '2019-08-17'
 description: 'Learn how to use dynamic providers with NestJS!'
 dev_to_path: 'https://dev.to/nestjs/advanced-nestjs-dynamic-providers-1ee'
+cover_image: https://github.com/BrunnerLivio/articles/blob/master/articles/advanced-nestjs-dynamic-providers/featured-img.png?raw=true
 ---
 
 _Livio is a member of the NestJS core team and creator of the @nestjs/terminus integration_
