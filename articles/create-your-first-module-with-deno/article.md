@@ -78,11 +78,11 @@ In this starter module, I decided to not split it up, because from my point of v
 
 ```typescript
 // mod.ts
-import { bold } from './deps.ts';
+import { bold } from "./deps.ts";
 
 /** Returns `Hello World` in bold */
 export function getHelloWorld(): string {
-  return bold('Hello World');
+  return bold("Hello World");
 }
 
 ```
@@ -98,7 +98,7 @@ Let's have a look at how we structure this file.
 ```typescript
 // deps.ts
 // Add your dependencies in here
-export { bold } from 'https://deno.land/std@v0.32.0/fmt/colors.ts';
+export { bold } from "https://deno.land/std@v0.32.0/fmt/colors.ts";
 
 ```
 
@@ -130,6 +130,7 @@ In general, you should always import external modules using your `deps.ts` file.
 Deno comes with a testing framework out of the box. It is simple, yet pretty useful and so far all I needed. To import the testing functions, we use a `test_deps.ts` file.
 
 ```typescript
+// test_deps.ts
 // Add your test dependencies in here
 export { test, runTests } from "https://deno.land/std@v0.32.0/testing/mod.ts";
 export { assertEquals } from "https://deno.land/std@v0.32.0/testing/asserts.ts";
@@ -140,6 +141,7 @@ Let's test our `mod.ts` then. Similarly to Node.js, where most projects use a `<
 Let's check whether our `getHelloWorld()` function from the `mod.ts` file returns a bold `Hello World` in a file called `mod_test.ts`.
 
 ```typescript
+// mod_test.ts
 import { test, assertEquals, runTests } from "./test_deps.ts";
 import { getHelloWorld } from "./mod.ts";
 
@@ -162,6 +164,7 @@ test result: OK 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out (2.00m
 Though, usually, you do not have a single test file in your repository (hopefully!!). That is why it is seen as best practice, to have a `test.ts` file in your repository, which simply imports all of your tests and runs them. While we are at it, let's move the `runTests()` function into the `test.ts` file.
 
 ```typescript
+// test.ts
 import { runTests } from "./test_deps.ts";
 
 import "./mod_test.ts";
