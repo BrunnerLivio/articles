@@ -2,5 +2,9 @@
   {
     "id": 142660,
     "relativePathToArticle": "./articles/advanced-nestjs-dynamic-providers/article.md"
+  },
+  {
+    "id": 247435,
+    "relativePathToArticle": "./articles/create-your-first-module-with-deno/article.md"
   }
 ]
