@@ -6,5 +6,9 @@
   {
     "id": 247435,
     "relativePathToArticle": "./articles/create-your-first-module-with-deno/article.md"
+  },
+  {
+    "id": 699984,
+    "relativePathToArticle": "./articles/use-stencil-with-gatsbyjs/article.md"
   }
 ]
