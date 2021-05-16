@@ -5,6 +5,8 @@ tags: stencil, gatsbyjs, ssr, webcomponents
 path: '/articles/use-stencil-with-gatsbyjs'
 date: '2021-03-29'
 description: 'Use a Stencil based web components library together with GatsbyJS'
+cover_image: 'https://dev-to-uploads.s3.amazonaws.com/uploads/articles/l7zcz35uhbye6e8b66i3.png'
+dev_to_path: 'https://dev.to/brunnerlivio/use-stencil-with-gatsbyjs-1omo'
 ---
 
 [Stencil](https://stenciljs.com/) is one of my favorite frameworks and _in my opinion_ combines the best of
@@ -317,5 +319,3 @@ Also inside the HTML of our Webcomponent has been rendered with the correct text
 ```
 
 So basically the `renderToString` function takes care of the first render - which allows us to use the WebComponents even without JavaScript.
-
-
