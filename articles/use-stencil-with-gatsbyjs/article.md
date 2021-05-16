@@ -10,7 +10,7 @@ cover_image: 'https://dev-to-uploads.s3.amazonaws.com/uploads/articles/tlqsil8dy
 
 _Livio is a member of the NestJS core team and creator of the @nestjs/terminus integration._
 
-[Stencil](https://stenciljs.com/) is one of my favorite frameworks and _in my opinion_ combines the best of both the Angular and React worlds. Though not only that! Stencil is *just* a toolchain for building your Web Components - **that run in every major browser**.
+[Stencil](https://stenciljs.com/) is one of my favorite frameworks and _in my opinion_ combines the best of both the Angular and React worlds. Though not only that! Stencil is _just_ a toolchain for building your Web Components - **that run in every major browser**.
 
 Unfortunately, there is a caveat with Web Components:
 They only run with JavaScript and do not work with SSR.
@@ -23,7 +23,7 @@ Let's have a look at how we were able to run our Design Systems UI library with 
 
 ## Setup the Project
 
-I am going to assume in this article that you have already set up a Stencil project. In my case, this project is called `@my-company/webcomponents`. 
+I am going to assume in this article that you have already set up a Stencil project. In my case, this project is called `@my-company/webcomponents`.
 
 In order to replicate my setup, execute the following commands. We will end up with a simple mono-repository. Though if you want to keep things separated - that would work too!
 
@@ -54,9 +54,7 @@ npx lerna init
 npx lerna bootstrap
 ```
 
-
 My folder structure now looks like this:
-
 
 ```bash
 $ tree -I node_modules
@@ -99,7 +97,6 @@ $ tree -I node_modules
 10 directories, 24 files
 ```
 
-
 ## Enable SSR with Stencil
 
 Once we have set up the fundamental project, let's make sure we have added the [_hydrate app_](https://stenciljs.com/docs/hydrate-app) functionality inside our Stencil project.
@@ -109,11 +106,14 @@ The hydrate app is a bundle of your same components but compiled so they can be 
 In order to enable it, simply go to your `stencil.config.ts` file and add the following line inside the `outputTargets`-array.
 
 `packages/webcomponents/stencil.config.ts`
+
 ```typescript
-{ type: 'dist-hydrate-script' }
+{
+  type: 'dist-hydrate-script';
+}
 ```
 
-This will generate a new folder called `hydrate` after running ` npm run build`. We will need to use that folder later!
+This will generate a new folder called `hydrate` after running `npm run build`. We will need to use that folder later!
 
 Don't forget to update your `.gitignore`-file to exclude the `hydrate` folder.
 
@@ -121,7 +121,6 @@ Don't forget to update your `.gitignore`-file to exclude the `hydrate` folder.
 $ cd packages/webcomponents
 $ echo "hydrate" >> .gitignore
 ```
-
 
 As well as updating your `package.json`-file.
 
@@ -160,15 +159,14 @@ $ touch gatsby-browser.js
 $ npm install --save glob
 ```
 
-
 > The code is inspired by https://github.com/jonearley/gatsby-plugin-stencil. Personally, I prefer the following enhanced version, since it allows you to add multiple Stencil packages, as well as provide better error handling. I have created a PR against the gatsby-plugin-stencil repository with the changes. So hopefully, you will be able to simply consume this as a Gatsby plugin soon https://github.com/jonearley/gatsby-plugin-stencil/pull/3 (posted @ 16. May 2021)
 
 `packages/docs/gatsby-node.js`
 
 ```javascript
-const util = require("util");
-const glob = util.promisify(require("glob"));
-const fs = require("fs");
+const util = require('util');
+const glob = util.promisify(require('glob'));
+const fs = require('fs');
 
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
@@ -181,48 +179,35 @@ exports.onPostBuild = async ({ reporter }) => {
   const pluginOptions = {
     module: ['@my-company/webcomponents'],
     renderToStringOptions: {},
-  }
-  
+  };
+
   let packages = pluginOptions.module;
   if (!Array.isArray(pluginOptions.module)) {
     packages = [pluginOptions.module];
   }
 
-  const files = await glob("public/**/*.html", { nodir: true });
+  const files = await glob('public/**/*.html', { nodir: true });
 
-  const renderToStringOptions = pluginOptions.renderToStringOptions
-    ? pluginOptions.renderToStringOptions
-    : {};
+  const renderToStringOptions = pluginOptions.renderToStringOptions ? pluginOptions.renderToStringOptions : {};
 
   async function preRenderPage(file, hydrate, pkg) {
     try {
-      const page = await readFile(file, "utf-8");
-      const { html, diagnostics = [] } = await hydrate.renderToString(
-        page,
-        renderToStringOptions
-      );
+      const page = await readFile(file, 'utf-8');
+      const { html, diagnostics = [] } = await hydrate.renderToString(page, renderToStringOptions);
 
-      diagnostics.forEach((diagnostic) =>
-        reporter.error(
-          `error pre-rendering file: ${file} with ${pkg}. ${JSON.stringify(
-            diagnostic,
-            null,
-            "  "
-          )}`
-        )
+      diagnostics.forEach(diagnostic =>
+        reporter.error(`error pre-rendering file: ${file} with ${pkg}. ${JSON.stringify(diagnostic, null, '  ')}`),
       );
 
       await writeFile(file, html);
     } catch (e) {
-      reporter.error(
-        `error pre-rendering file: ${file} with ${pkg}. ${e.message}`
-      );
+      reporter.error(`error pre-rendering file: ${file} with ${pkg}. ${e.message}`);
     }
   }
 
   async function preRenderPackage(pkg) {
     const hydrate = require(`${pkg}/hydrate`);
-    await Promise.all(files.map((file) => preRenderPage(file, hydrate, pkg)));
+    await Promise.all(files.map(file => preRenderPage(file, hydrate, pkg)));
     reporter.info(`pre-rendered ${pkg}`);
   }
 
@@ -234,11 +219,10 @@ In a nutshell, this script will be executed in "post build" (so after the HTML, 
 
 Now we just need to add a few lines to our `gatsby-browser.js`.
 
-
 `packages/docs/gatsby-browser.js`
 
 ```javascript
-const { defineCustomElements } = require("@my-company/webcomponents/loader");
+const { defineCustomElements } = require('@my-company/webcomponents/loader');
 defineCustomElements();
 ```
 
@@ -261,11 +245,11 @@ const IndexPage = () => {
         <br />
 ```
 
-Done! 🎉 
+Done! 🎉
 Let's link our Webcomponents library with the docs and build the site.
 
 ```bash
-$ npm link @my-company/webcomponents 
+$ npm link @my-company/webcomponents
 $ npm run build
 # Start a simple HTTP server on port 8000 from the "public" folder
 $ npx servor public index.html 8000
@@ -273,7 +257,7 @@ $ npx servor public index.html 8000
 # Open up your site on http://localhost:8000
 ```
 
-You should now see the following site. Note the _"Hello, World! I'm Albus Percival Wulfric Brian Dumbledore"_ is being rendered by our Webcomponent! 
+You should now see the following site. Note the _"Hello, World! I'm Albus Percival Wulfric Brian Dumbledore"_ is being rendered by our Webcomponent!
 
 ![Gatsby website rendering our webcomponent](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/s80zf3nztbqveo7eev2v.png)
 
@@ -321,11 +305,9 @@ Also inside the HTML of our Webcomponent has been rendered with the correct text
 
 So basically the `renderToString` function takes care of the first render - which allows us to use the WebComponents even without JavaScript.
 
-
 ## Add TypeScript support within GatsbyJS
 
 In case you are using GatsbyJS with Typescript, adding support to your Stencil Webcomponents is fairly straightforward.
-
 
 Create a new folder called `types` inside the `packages/docs/`-folder
 
@@ -338,24 +320,22 @@ $ touch wc.d.ts
 and add the following code inside the `types/wc.d.ts` file
 
 `packages/docs/types/wc.d.ts`
+
 ```typescript
 // This is a workaround to include type-safe stencil web components
 // with TSX https://github.com/ionic-team/stencil/issues/1636
-import { JSX as LocalJSX } from "@my-company/webcomponents";
-import { DetailedHTMLProps, HTMLAttributes } from "react";
+import { JSX as LocalJSX } from '@my-company/webcomponents';
+import { DetailedHTMLProps, HTMLAttributes } from 'react';
 
 type StencilProps<T> = {
-  [P in keyof T]?: Omit<T[P], "ref"> | HTMLAttributes<T>;
+  [P in keyof T]?: Omit<T[P], 'ref'> | HTMLAttributes<T>;
 };
 
 type ReactProps<T> = {
   [P in keyof T]?: DetailedHTMLProps<HTMLAttributes<T[P]>, T[P]>;
 };
 
-type StencilToReact<
-  T = LocalJSX.IntrinsicElements,
-  U = HTMLElementTagNameMap
-> = StencilProps<T> & ReactProps<U>;
+type StencilToReact<T = LocalJSX.IntrinsicElements, U = HTMLElementTagNameMap> = StencilProps<T> & ReactProps<U>;
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -368,6 +348,7 @@ declare global {
 Load the type definition file within your `tsconfig.json`
 
 `packages/docs/tsconfig.json`
+
 ```diff
 {
   "compilerOptions": {
@@ -389,10 +370,9 @@ Now we keep our types up to date. The `wc.d.ts` file import the types of your We
 In case you are using [`@stencil/react-output-target`](https://www.npmjs.com/package/@stencil/react-output-target)
 to wrap your Webcomponents within React components in order to have a more "native" feel, follow this chapter.
 
-Feel free to skip this chapter in case you are fine using the raw Webcomponents. 
+Feel free to skip this chapter in case you are fine using the raw Webcomponents.
 **Beware though, [React and Webcomponents comes with some limitations](https://custom-elements-everywhere.com/#react) which are fixed by `@stencil/react-output-target`.**
 So personally, I can only recommend this plugin for your Stencil application.
-
 
 ### Setup the React package
 
@@ -420,6 +400,7 @@ Inside your `stencil.config.ts` add the following lines to configure the
 React output target.
 
 `packages/webcomponents/stencil.config.ts`
+
 ```diff
   import { Config } from '@stencil/core';
 + import { reactOutputTarget } from '@stencil/react-output-target';
@@ -444,6 +425,7 @@ $ npm run build
 Let's clean that up as well!
 
 `packages/react/.gitignore`
+
 ```
 # compiled output
 /dist
@@ -470,6 +452,7 @@ dist-transpiled
 Now we just need to setup our `package.json`.
 
 `packages/react/package.json`
+
 ```json
 {
   "name": "@my-company/react",
@@ -478,9 +461,7 @@ Now we just need to setup our `package.json`.
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "files": [
-    "dist/"
-  ],
+  "files": ["dist/"],
   "main": "dist/index.js",
   "module": "dist/index.js",
   "esmodule": "dist/index.js",
@@ -512,7 +493,7 @@ Now we just need to setup our `package.json`.
 }
 ```
 
-and install the dependencies with 
+and install the dependencies with
 
 ```bash
 $ npm link @my-company/webcomponents
@@ -522,48 +503,46 @@ $ npm install
 ### Bundle your React package
 
 Personally, I like to use Rollup for bundling my libraries. Though feel free to use
-whatever tool you want to use. **Make sure you produce a `CommonJS` output bundle 
+whatever tool you want to use. **Make sure you produce a `CommonJS` output bundle
 so that it works all fine with GatsbyJS**
 
 Inside your `rollup.config.js` add the following configuration
 
 `packages/react/rollup.config.js`
+
 ```javascript
-import resolve from "@rollup/plugin-node-resolve";
-import sourcemaps from "rollup-plugin-sourcemaps";
+import resolve from '@rollup/plugin-node-resolve';
+import sourcemaps from 'rollup-plugin-sourcemaps';
 
 export default {
   input: {
-    index: "dist-transpiled/index",
+    index: 'dist-transpiled/index',
   },
   output: [
     {
-      dir: "dist/",
-      entryFileNames: "[name].esm.js",
-      chunkFileNames: "[name]-[hash].esm.js",
-      format: "es",
+      dir: 'dist/',
+      entryFileNames: '[name].esm.js',
+      chunkFileNames: '[name]-[hash].esm.js',
+      format: 'es',
       sourcemap: true,
     },
     {
-      dir: "dist/",
-      format: "commonjs",
+      dir: 'dist/',
+      format: 'commonjs',
       preferConst: true,
       sourcemap: true,
     },
   ],
-  external: (id) => !/^(\.|\/)/.test(id),
-  plugins: [
-    resolve(),
-    sourcemaps(),
-  ],
+  external: id => !/^(\.|\/)/.test(id),
+  plugins: [resolve(), sourcemaps()],
 };
 ```
 
 Also, add a `tsconfig.json` which transpiles our TypeScript files
 before we bundle it with Rollup.
 
-
 `packages/react/tsconfig.json`
+
 ```json
 {
   "compilerOptions": {
@@ -597,7 +576,7 @@ before we bundle it with Rollup.
 ```
 
 By running the build command of the React package we are generating
-a new `dist`-bundle 
+a new `dist`-bundle
 
 ```bash
 $ cd packages/react
@@ -623,6 +602,7 @@ npm link @my-company/webcomponents @my-company/react
 As a next step, we can refactor our previously used Webcomponent inside the `pages/index.js` file
 
 `packages/docs/src/pages/index.js`
+
 ```diff
 + import { MyComponent } from "@my-company/react";
 
@@ -644,7 +624,6 @@ As a next step, we can refactor our previously used Webcomponent inside the `pag
 and that is it! We can now run and build the website as we
 used to.
 
-
 ## Conclusion
 
 In this article, we examined why I personally love Stencil.
@@ -654,7 +633,7 @@ independent, yet can be integrated into frameworks such as React to have a more 
 developer experience.
 
 Not only that - you can go above and beyond by enabling SSR. The TypeScript support
-for users of a Stencil UI library is just phenomenal. 
+for users of a Stencil UI library is just phenomenal.
 
 The cherry on top - which we, unfortunately, did not have a look at in this article - is
 the automated markdown documentation of each component.
