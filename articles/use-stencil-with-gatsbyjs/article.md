@@ -20,6 +20,8 @@ Whilst that is true - if you've built your Web Components library with Stencil, 
 
 Let's have a look at how we were able to run our Design Systems UI library with GatsbyJS! With this article, I won't go into details on how you set up a Stencil project. So make sure you understand the fundamentals of Stencil already.
 
+> [Check out the final repository here](https://github.com/BrunnerLivio/stencil-gatsbyjs-starter-repo)
+
 ## Setup the Project
 
 I am going to assume in this article that you have already set up a Stencil project. In my case, this project is called `@my-company/webcomponents`. 
@@ -319,3 +321,5 @@ Also inside the HTML of our Webcomponent has been rendered with the correct text
 ```
 
 So basically the `renderToString` function takes care of the first render - which allows us to use the WebComponents even without JavaScript.
+
+> [Check out the final repository here](https://github.com/BrunnerLivio/stencil-gatsbyjs-starter-repo)
