@@ -10,9 +10,7 @@ cover_image: 'https://dev-to-uploads.s3.amazonaws.com/uploads/articles/tlqsil8dy
 
 _Livio is a member of the NestJS core team and creator of the @nestjs/terminus integration._
 
-[Stencil](https://stenciljs.com/) is one of my favorite frameworks and _in my opinion_ combines the best of
-both the Angular and React worlds. Though not only that! Stencil is *just* a toolchain
-for building your Web Components - **that run in every major browser**.
+[Stencil](https://stenciljs.com/) is one of my favorite frameworks and _in my opinion_ combines the best of both the Angular and React worlds. Though not only that! Stencil is *just* a toolchain for building your Web Components - **that run in every major browser**.
 
 Unfortunately, there is a caveat with Web Components:
 They only run with JavaScript and do not work with SSR.
@@ -108,7 +106,7 @@ Once we have set up the fundamental project, let's make sure we have added the [
 
 The hydrate app is a bundle of your same components but compiled so they can be hydrated on a NodeJS server, and generate HTML.
 
-In order to enable it, simply go to your `stencil.config.ts` file (in our case `packages/webcomponents/stencil.config.ts`) and add the following line inside the `outputTargets`-array.
+In order to enable it, simply go to your `stencil.config.ts` file and add the following line inside the `outputTargets`-array.
 
 `packages/webcomponents/stencil.config.ts`
 ```typescript
