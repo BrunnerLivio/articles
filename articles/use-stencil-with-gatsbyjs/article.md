@@ -161,7 +161,7 @@ $ npm install --save glob
 ```
 
 
-> The code is inspired by https://github.com/jonearley/gatsby-plugin-stencil. Personally, I prefer this enhanced version, since it allows you to add multiple Stencil packages, as well as provide better error handling. I have created a PR against the repository with the changes, so hopefully, you will be able to simply consume this as a Gatsby plugin soon https://github.com/jonearley/gatsby-plugin-stencil/pull/3 (16. May 2021)
+> The code is inspired by https://github.com/jonearley/gatsby-plugin-stencil. Personally, I prefer the following enhanced version, since it allows you to add multiple Stencil packages, as well as provide better error handling. I have created a PR against the gatsby-plugin-stencil repository with the changes. So hopefully, you will be able to simply consume this as a Gatsby plugin soon https://github.com/jonearley/gatsby-plugin-stencil/pull/3 (posted @ 16. May 2021)
 
 `packages/docs/gatsby-node.js`
 
@@ -283,7 +283,7 @@ In order to double-check the SSR we can try disabling JavaScript and the website
 
 You still see the _"Hello World! I'm Albus..."_? Great! The Webcomponent still renders with JavaScript disabled.
 
-So what did Stencils `renderToString` actually do. Well let's have a look at the diff of the built `index.html` file we just generated from the `npm run build`.
+So what did Stencils `renderToString` actually do? Well let's have a look at the diff of the built `index.html` file we just generated from the `npm run build`.
 
 As first stricking difference we see in the `<head>`-tag that Stencil has added the CSS of our web component:
 
