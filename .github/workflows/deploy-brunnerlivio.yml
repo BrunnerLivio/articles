@@ -17,17 +17,10 @@ jobs:
           path: brunnerliv.io
       - run: |
           cd brunnerliv.io
+          git config --global user.name 'Github Actions'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git submodule update --remote --init --recursive
-      - name: Pushes to another repository
-        id: push_directory
-        uses: cpina/github-action-push-to-another-repository@devel
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-        with:
-          source-directory: brunnerliv.io/
-          destination-github-username: 'brunnerlivio'
-          destination-repository-name: 'brunnerliv.io'
-          user-name: brunnerlivio
-          user-email: livio.brunner.lb1@gmail.com
-          commit-message: Update submodules
-          target-branch: master
+          git add -A .
+          git commit -m "Update submodule"
+          git push --force "https://${{ secrets.API_TOKEN_GITHUB }}@github.com/BrunnerLivio/brunnerliv.io.git" master:master
+          
