@@ -17,6 +17,7 @@ jobs:
           path: brunnerliv.io
       - run: |
           cd brunnerliv.io
+          git config --unset-all http.https://github.com/.extraheader
           git config --global user.name 'Livio Brunner'
           git config --global user.email 'livio.brunner.lb1@gmail.com'
           git submodule update --remote --init --recursive
